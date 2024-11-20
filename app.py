@@ -225,8 +225,8 @@ def export_pdf(note_id):
             "modDate": current_time
         })
         
-        # Add content with title
-        content = f"# {note.title}\n\n{note.content}"
+        # Add content without title
+        content = note.content
         pdf.add_section(Section(content, toc=False))
         
         # Save to BytesIO
