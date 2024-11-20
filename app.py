@@ -6,8 +6,7 @@ import os
 from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
-from weasyprint import HTML, CSS
-from weasyprint.text.fonts import FontConfiguration
+from markdown_pdf import MarkdownPdf, Section
 import io
 
 # Load environment variables
@@ -203,94 +202,31 @@ def export_pdf(note_id):
         return redirect(url_for('index'))
     
     try:
-        # Convert markdown to HTML
-        html_content = markdown2.markdown(note.content, extras=['fenced-code-blocks', 'tables'])
+        # Get current user
+        user = User.query.get(session['user_id'])
+        current_time = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
         
-        # Create HTML document with styling
-        html = f"""
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="UTF-8">
-            <title>{note.title}</title>
-            <style>
-                @page {{
-                    margin: 2.5cm;
-                    @top-center {{
-                        content: "{note.title}";
-                        font-family: Arial, sans-serif;
-                        font-size: 10pt;
-                        color: #666;
-                    }}
-                    @bottom-right {{
-                        content: counter(page);
-                        font-family: Arial, sans-serif;
-                        font-size: 10pt;
-                    }}
-                }}
-                body {{
-                    font-family: Arial, sans-serif;
-                    line-height: 1.6;
-                    font-size: 11pt;
-                }}
-                h1 {{
-                    color: #2c3e50;
-                    text-align: center;
-                    font-size: 24pt;
-                    margin-bottom: 2em;
-                }}
-                h2, h3 {{
-                    color: #34495e;
-                    margin-top: 1.5em;
-                }}
-                pre {{
-                    background-color: #f8f9fa;
-                    padding: 1em;
-                    border-radius: 4px;
-                    font-family: 'Courier New', monospace;
-                    font-size: 9pt;
-                    white-space: pre-wrap;
-                    overflow-x: auto;
-                }}
-                code {{
-                    font-family: 'Courier New', monospace;
-                    font-size: 9pt;
-                    background-color: #f8f9fa;
-                    padding: 2px 4px;
-                    border-radius: 2px;
-                }}
-                table {{
-                    width: 100%;
-                    border-collapse: collapse;
-                    margin: 1em 0;
-                }}
-                th, td {{
-                    border: 1px solid #ddd;
-                    padding: 8px;
-                    text-align: left;
-                }}
-                th {{
-                    background-color: #f5f5f5;
-                }}
-            </style>
-        </head>
-        <body>
-            <h1>{note.title}</h1>
-            {html_content}
-        </body>
-        </html>
-        """
+        # Create PDF from markdown
+        pdf = MarkdownPdf()
         
-        # Configure fonts
-        font_config = FontConfiguration()
+        # Set metadata
+        pdf.meta.update({
+            "title": note.title,
+            "author": user.username if user else "",
+            "subject": f"Note exported from ReThink",
+            "keywords": "markdown,note,rethink",
+            "creator": "ReThink Notes App",
+            "producer": "ReThink Notes App",
+            "creationDate": current_time,
+            "modDate": current_time
+        })
         
-        # Create PDF in memory
+        # Add content
+        pdf.add_section(Section(note.content, toc=False))
+        
+        # Save to BytesIO instead of file
         pdf_file = io.BytesIO()
-        HTML(string=html).write_pdf(
-            pdf_file,
-            font_config=font_config,
-            presentational_hints=True
-        )
+        pdf.save(pdf_file)
         
         # Reset file pointer to start
         pdf_file.seek(0)
