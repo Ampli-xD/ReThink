@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReThink - Markdown Notes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.css" rel="stylesheet" />
+    <style>
+        .note-list {
+            height: 100vh;
+            border-right: 1px solid #dee2e6;
+            padding: 20px;
+        }
+        .note-item {
+            cursor: pointer;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .note-item:hover {
+            background-color: #f8f9fa;
+        }
+        .note-item.active {
+            background-color: #e9ecef;
+        }
+        .editor-container {
+            height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .CodeMirror, .CodeMirror-scroll {
+            min-height: 500px;
+        }
+        .editor-preview-side {
+            padding: 20px;
+            word-break: break-word;
+            background-color: white;
+        }
+        .editor-preview {
+            padding: 20px;
+            word-break: break-word;
+            background-color: white;
+        }
+        pre[class*="language-"] {
+            margin: 1em 0;
+            border-radius: 4px;
+        }
+        code[class*="language-"] {
+            font-size: 0.9em;
+        }
+        .EasyMDEContainer {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .EasyMDEContainer .CodeMirror {
+            flex-grow: 1;
+        }
+        .editor-toolbar {
+            opacity: 1 !important;
+        }
+        .editor-toolbar a {
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            width: 30px !important;
+            height: 30px;
+            margin: 0 !important;
+            padding: 0 !important;
+            text-align: center;
+            border: 1px solid transparent !important;
+        }
+        .editor-toolbar a:hover {
+            border: 1px solid #95a5a6 !important;
+        }
+        .editor-toolbar a::before {
+            font-size: 16px !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            line-height: 1 !important;
+        }
+        .editor-toolbar a.fa-table::before {
+            font-size: 14px !important;
+            position: relative;
+            top: 1px;
+        }
+        .editor-toolbar i.separator {
+            margin: 0 4px !important;
+            padding: 0 !important;
+            width: 8px !important;
+        }
+        .editor-preview table, .editor-preview-side table {
+            border-collapse: collapse;
+            margin: 15px 0;
+            width: 100%;
+        }
+        .editor-preview table th, 
+        .editor-preview table td,
+        .editor-preview-side table th,
+        .editor-preview-side table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .editor-preview table th,
+        .editor-preview-side table th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+        }
+        .editor-preview table tr:nth-child(even),
+        .editor-preview-side table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .editor-preview-side {
+            border-left: 1px solid #ddd;
+        }
+        .EasyMDEContainer.sided--no-fullscreen {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+        .EasyMDEContainer.sided--no-fullscreen .CodeMirror {
+            flex: 1 1 50%;
+            max-width: 50%;
+            height: calc(100vh - 200px) !important;
+        }
+        .EasyMDEContainer.sided--no-fullscreen .editor-preview-side {
+            flex: 1 1 50%;
+            max-width: 50%;
+            height: calc(100vh - 200px) !important;
+            margin-top: 0;
+        }
+        .EasyMDEContainer.sided--no-fullscreen .editor-toolbar {
+            flex: 1 1 100%;
+        }
+        .CodeMirror {
+            font-size: 14px !important;
+        }
+        .CodeMirror .cm-header-1,
+        .CodeMirror .cm-header-2,
+        .CodeMirror .cm-header-3,
+        .CodeMirror .cm-header-4,
+        .CodeMirror .cm-header-5,
+        .CodeMirror .cm-header-6 {
+            font-size: 14px !important;
+            line-height: 1.5 !important;
+        }
+        /* Preview area can keep different heading sizes */
+        .editor-preview h1,
+        .editor-preview-side h1 {
+            font-size: 2em;
+        }
+        .editor-preview h2,
+        .editor-preview-side h2 {
+            font-size: 1.5em;
+        }
+        .editor-preview h3,
+        .editor-preview-side h3 {
+            font-size: 1.17em;
+        }
+    </style>
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+     <!-- Prism.js Core -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+     <!-- Common languages -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markdown.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+     <!-- Plugins -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">ReThink Notes</a>
+            <div class="d-flex align-items-center">
+                <span class="me-3">Welcome, {{ user.username }}!</span>
+                <a href="{{ url_for('logout') }}" class="btn btn-outline-danger">Logout</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Note List -->
+            <div class="col-md-3 note-list">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4>Notes</h4>
+                    <button class="btn btn-primary" id="new-note">New Note</button>
+                </div>
+                <div id="notes-container"></div>
+            </div>
+
+            <!-- Editor -->
+            <div class="col-md-9 editor-container">
+                <div id="editor-area" style="display: none;">
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="note-title" placeholder="Note Title">
+                    </div>
+                    <textarea id="note-content"></textarea>
+                </div>
+                <div id="empty-state" class="text-center mt-5">
+                    <h3>Select a note or create a new one</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dark Dashboard Portfolio</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Dark Contrast Colors */
+            --color-bg: #000000;  /* Pitch black background */
+            --color-card-bg: #1A1A1A;  /* Slightly lighter black for cards */
+            
+            --color-orange-pastel: #FFAB91;  /* Pastel orange */
+            --color-blue-pastel: #A7C7E7;  /* Pastel blue */
+            --color-green-pastel: #A3D9B1;  /* Pastel green */
+            
+            --color-text: #E9ECEF;  /* Light text color for contrast */
+            --color-text-light: #A6A6A6; /* Lighter text for secondary content */
+
+            /* Neon Gradients (adjusted for pastel theme) */
+            --gradient-main: linear-gradient(135deg, var(--color-orange-pastel) 0%, var(--color-blue-pastel) 100%);
+            --gradient-accent: linear-gradient(135deg, var(--color-green-pastel) 0%, var(--color-blue-pastel) 100%);
+            --gradient-dark: linear-gradient(135deg, #1A1A1A 0%, #000000 100%);
+
+            /* Typography */
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Space Grotesk', sans-serif;
+
+            /* Glowing Shadows */
+            --shadow-sm: 0 2px 10px rgba(255, 171, 145, 0.1);
+            --shadow-md: 0 4px 20px rgba(255, 171, 145, 0.15);
+            --shadow-lg: 0 8px 30px rgba(255, 171, 145, 0.2);
+            --shadow-neon: 0 0 20px rgba(255, 171, 145, 0.3);
+
+            /* Border Radius */
+            --radius-sm: 12px;
+            --radius-md: 20px;
+            --radius-lg: 30px;
+            --radius-xl: 40px;
+
+            /* Interactive Components */
+            --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --color-success: #4CAF50;
+            --color-warning: #FFC107;
+            --color-error: #F44336;
+        }
+
+        body {
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            line-height: 1.7;
+            padding: 3rem;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 2rem;
+            margin: 3rem 0;
+            position: relative;
+        }
+
+        /* Enhanced Cards with Glassmorphism */
+        .card {
+            background: var(--color-card-bg);
+            border: 1px solid rgba(255, 171, 145, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gradient-main);
+            opacity: 0.5;
+        }
+
+        /* Featured Project Card */
+        .card-featured {
+            grid-column: span 8;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            background: var(--color-card-bg) url('/api/placeholder/800/500') center/cover no-repeat;
+        }
+
+        .card-featured::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, var(--color-card-bg) 20%, transparent 100%);
+            z-index: 1;
+        }
+
+        .card-featured > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Stats Dashboard */
+        .card-stats {
+            grid-column: span 4;
+            background: var(--gradient-dark);
+        }
+
+        /* Service Cards */
+        .card-service {
+            grid-column: span 3;
+            transition: all 0.4s ease;
+            background-color: var(--color-card-bg);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+        }
+
+        .card-service:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-neon);
+        }
+
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 171, 145, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .service-icon::after {
+            content: '';
+            position: absolute;
+            inset: -5px;
+            border: 2px solid var(--color-orange-pastel);
+            border-radius: 50%;
+            opacity: 0.5;
+        }
+
+        /* Profile Card */
+        .card-profile {
+            grid-column: span 6;
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .profile-stat {
+            text-align: center;
+        }
+
+        /* Typography */
+        .heading-xl {
+            font-family: var(--font-heading);
+            font-size: 4rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+
+        .heading-lg {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            color: var(--color-text);
+            margin-bottom: 1rem;
+        }
+
+        /* Tags (Enhanced with Pastel Shades) */
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            font-weight: 500;
+            background: rgba(255, 171, 145, 0.1);
+            color: var(--color-orange-pastel);
+            margin-right: 0.75rem;
+            margin-bottom: 0.75rem;
+            border: 1px solid rgba(255, 171, 145, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .tag:hover {
+            background: rgba(255, 171, 145, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Dashboard Stats */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            position: relative;
+        }
+
+        .stat-number {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-orange-pastel);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 10px rgba(255, 171, 145, 0.3);
+        }
+
+        /* Progress Bars */
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress-value {
+            height: 100%;
+            background: var(--gradient-main);
+            border-radius: 3px;
+            transition: width 1s ease;
+            position: relative;
+        }
+
+        .progress-value::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 10px;
+            height: 100%;
+            background: white;
+            opacity: 0.3;
+            filter: blur(3px);
+        }
+
+        /* Modern Form Components */
+        .form-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            background: transparent;
+            border: 2px solid var(--color-text-light);
+            border-radius: var(--radius-md);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            transition: var(--transition-smooth);
+        }
+
+        .form-input:focus {
+            border-color: var(--color-orange-pastel);
+            box-shadow: var(--shadow-sm);
+            outline: none;
+        }
+
+        .form-label {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-text-light);
+            transition: var(--transition-smooth);
+            pointer-events: none;
+        }
+
+        .form-input:focus + .form-label,
+        .form-input:not(:placeholder-shown) + .form-label {
+            top: -0.5rem;
+            left: 0.5rem;
+            font-size: 0.75rem;
+            padding: 0 0.25rem;
+            background: var(--color-card-bg);
+            color: var(--color-orange-pastel);
+        }
+
+        /* Card Variations */
+        .card-glass {
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card-hover {
+            transition: var(--transition-smooth);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-neon);
+        }
+
+        /* Loading States */
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--color-card-bg);
+            border-top-color: var(--color-orange-pastel);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Button Styles */
+        .btn-modern {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-md);
+            background: var(--gradient-main);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .btn-modern:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-neon);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--color-orange-pastel);
+        }
+
+        .btn-outline:hover {
+            background: var(--color-orange-pastel);
+            color: var(--color-bg);
+        }
+
+        /* Chat Input Styles */
+        .chat-input-container {
+            position: relative;
+            margin-top: 1rem;
+        }
+
+        .chat-input {
+            width: 100%;
+            padding: 1rem 3rem 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 171, 145, 0.2);
+            border-radius: var(--radius-md);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            transition: var(--transition-smooth);
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--color-orange-pastel);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .chat-input::placeholder {
+            color: var(--color-text-light);
+        }
+
+        .send-button {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--color-orange-pastel);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .send-button:hover {
+            transform: translateY(-50%) scale(1.1);
+            color: var(--color-text);
+        }
+
+        /* Feature Grid Styles */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 171, 145, 0.1);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            transition: var(--transition-smooth);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 171, 145, 0.05);
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 171, 145, 0.1);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--color-text);
+        }
+
+        .feature-description {
+            font-size: 0.9rem;
+            color: var(--color-text-light);
+            line-height: 1.5;
+        }
+
+        /* Timeline Styles */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--color-orange-pastel), var(--color-blue-pastel));
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 0;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            background: var(--color-card-bg);
+            border: 2px solid var(--color-orange-pastel);
+            z-index: 1;
+        }
+
+        .timeline-date {
+            font-size: 0.85rem;
+            color: var(--color-text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Skill Badge Styles */
+        .skill-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .skill-badge {
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition-smooth);
+        }
+
+        .skill-badge.design {
+            background: rgba(255, 171, 145, 0.1);
+            color: var(--color-orange-pastel);
+            border: 1px solid rgba(255, 171, 145, 0.2);
+        }
+
+        .skill-badge.dev {
+            background: rgba(167, 199, 231, 0.1);
+            color: var(--color-blue-pastel);
+            border: 1px solid rgba(167, 199, 231, 0.2);
+        }
+
+        .skill-badge.marketing {
+            background: rgba(163, 217, 177, 0.1);
+            color: var(--color-green-pastel);
+            border: 1px solid rgba(163, 217, 177, 0.2);
+        }
+
+        .skill-badge:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.2);
+        }
+
+        /* Notification Panel */
+        .notification-panel {
+            background: rgba(26, 26, 26, 0.95);
+            border: 1px solid rgba(255, 171, 145, 0.1);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .notification-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            transition: var(--transition-smooth);
+        }
+
+        .notification-item:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .notification-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .notification-content {
+            flex-grow: 1;
+        }
+
+        .notification-title {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .notification-time {
+            font-size: 0.85rem;
+            color: var(--color-text-light);
+        }
+
+        /* Quick Actions Menu */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .action-button {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 171, 145, 0.1);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition-smooth);
+            cursor: pointer;
+        }
+
+        .action-button:hover {
+            background: rgba(255, 171, 145, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .action-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 171, 145, 0.1);
+            color: var(--color-orange-pastel);
+        }
+
+        .action-label {
+            font-size: 0.85rem;
+            text-align: center;
+            color: var(--color-text);
+        }
+
+        /* Analytics Styles */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .analytics-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            transition: var(--transition-smooth);
+        }
+
+        .analytics-card:hover {
+            background: rgba(255, 171, 145, 0.05);
+        }
+
+        .analytics-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .analytics-value {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            font-weight: 700;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .analytics-trend {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .trend-up {
+            color: var(--color-green-pastel);
+        }
+
+        .trend-down {
+            color: #FF6B6B;
+        }
+
+        /* Project Gallery */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            aspect-ratio: 16/9;
+            cursor: pointer;
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition-smooth);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1.5rem;
+            opacity: 0;
+            transition: var(--transition-smooth);
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-item:hover .gallery-image {
+            transform: scale(1.05);
+        }
+
+        .gallery-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--color-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .gallery-tags {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .gallery-tag {
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            background: rgba(255, 171, 145, 0.2);
+            color: var(--color-orange-pastel);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="heading-xl">Creative Dashboard</h1>
+
+        <div class="dashboard-grid">
+            <!-- Featured Project Card -->
+            <div class="card card-featured">
+                <span class="tag">
+                    <i class="fas fa-star mr-2"></i>
+                    Featured Project
+                </span>
+                <h3 class="heading-lg">Artistic Vision</h3>
+                <p>Exploring the boundaries of digital art and design</p>
+                <div class="progress-bar">
+                    <div class="progress-value" style="width: 75%"></div>
+                </div>
+            </div>
+
+            <!-- Stats Dashboard -->
+            <div class="card card-stats">
+                <h3>Performance</h3>
+                <div class="activity-graph">
+                    <div class="graph-line"></div>
+                </div>
+                <div class="stat-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">94%</div>
+                        <div>Client Satisfaction</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">180+</div>
+                        <div>Projects</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Service Cards -->
+            <div class="card card-service">
+                <div class="service-icon">
+                    <i class="fas fa-paint-brush fa-lg" style="color: var(--color-orange-pastel)"></i>
+                </div>
+                <h3>Visual Design</h3>
+                <p>Creating stunning visuals</p>
+                <div class="progress-bar">
+                    <div class="progress-value" style="width: 85%"></div>
+                </div>
+            </div>
+
+            <div class="card card-service">
+                <div class="service-icon">
+                    <i class="fas fa-code fa-lg" style="color: var(--color-blue-pastel)"></i>
+                </div>
+                <h3>Development</h3>
+                <p>Building the future</p>
+                <div class="progress-bar">
+                    <div class="progress-value" style="width: 90%"></div>
+                </div>
+            </div>
+
+            <div class="card card-service">
+                <div class="service-icon">
+                    <i class="fas fa-lightbulb fa-lg" style="color: var(--color-green-pastel)"></i>
+                </div>
+                <h3>Strategy</h3>
+                <p>Planning for success</p>
+                <div class="progress-bar">
+                    <div class="progress-value" style="width: 80%"></div>
+                </div>
+            </div>
+
+            <div class="card card-service">
+                <div class="service-icon">
+                    <i class="fas fa-magic fa-lg" style="color: var(--color-orange-pastel)"></i>
+                </div>
+                <h3>Branding</h3>
+                <p>Crafting identities</p>
+                <div class="progress-bar">
+                    <div class="progress-value" style="width: 95%"></div>
+                </div>
+            </div>
+
+            <!-- Profile Section -->
+            <div class="card card-profile">
+                <div class="profile-image">
+                    <img src="/api/placeholder/150/150" alt="Profile">
+                </div>
+                <div>
+                    <h3 class="heading-lg">Sarah Creative</h3>
+                    <p>Senior Art Director</p>
+                    <div class="profile-stats">
+                        <div class="profile-stat">
+                            <div class="stat-number">15+</div>
+                            <div>Years</div>
+                        </div>
+                        <div class="profile-stat">
+                            <div class="stat-number">300+</div>
+                            <div>Projects</div>
+                        </div>
+                        <div class="profile-stat">
+                            <div class="stat-number">7</div>
+                            <div>Awards</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Example Implementation -->
+            <div class="card card-glass" style="grid-column: span 8;">
+                <div class="service-icon">
+                    <i class="fas fa-comments fa-lg" style="color: var(--color-orange-pastel)"></i>
+                </div>
+                <h3 class="heading-lg">Quick Chat</h3>
+                <p style="margin-bottom: 2rem;">Send us a quick message</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-bolt" style="color: var(--color-orange-pastel)"></i>
+                        </div>
+                        <h4 class="feature-title">Instant Reply</h4>
+                        <p class="feature-description">Get responses within minutes from our team</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt" style="color: var(--color-blue-pastel)"></i>
+                        </div>
+                        <h4 class="feature-title">Secure Chat</h4>
+                        <p class="feature-description">End-to-end encrypted messaging</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-history" style="color: var(--color-green-pastel)"></i>
+                        </div>
+                        <h4 class="feature-title">24/7 Support</h4>
+                        <p class="feature-description">Available round the clock</p>
+                    </div>
+                </div>
+
+                <div class="chat-input-container">
+                    <input type="text" class="chat-input" placeholder="Type your message here...">
+                    <button class="send-button">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="card card-glass" style="grid-column: span 4;">
+                <div class="service-icon">
+                    <i class="fas fa-chart-line fa-lg" style="color: var(--color-blue-pastel)"></i>
+                </div>
+                <h3 class="heading-lg">Activity Feed</h3>
+                <p style="margin-bottom: 2rem;">Recent interactions</p>
+                
+                <div class="feature-grid" style="grid-template-columns: 1fr;">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-check" style="color: var(--color-green-pastel)"></i>
+                        </div>
+                        <h4 class="feature-title">Project Milestone</h4>
+                        <p class="feature-description">Design phase completed</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-users" style="color: var(--color-orange-pastel)"></i>
+                        </div>
+                        <h4 class="feature-title">Team Meeting</h4>
+                        <p class="feature-description">Sprint planning session</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-bell" style="color: var(--color-blue-pastel)"></i>
+                        </div>
+                        <h4 class="feature-title">New Notification</h4>
+                        <p class="feature-description">Client feedback received</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline Card -->
+            <div class="card card-glass" style="grid-column: span 4;">
+                <div class="service-icon">
+                    <i class="fas fa-clock fa-lg" style="color: var(--color-orange-pastel)"></i>
+                </div>
+                <h3 class="heading-lg">Project Timeline</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">Today</div>
+                        <h4 class="feature-title">Design Review</h4>
+                        <p class="feature-description">Final mockups approved</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">Yesterday</div>
+                        <h4 class="feature-title">Development Sprint</h4>
+                        <p class="feature-description">Frontend implementation</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">3 days ago</div>
+                        <h4 class="feature-title">Client Meeting</h4>
+                        <p class="feature-description">Project requirements finalized</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skills & Expertise Card -->
+            <div class="card card-glass" style="grid-column: span 4;">
+                <div class="service-icon">
+                    <i class="fas fa-brain fa-lg" style="color: var(--color-blue-pastel)"></i>
+                </div>
+                <h3 class="heading-lg">Skills & Expertise</h3>
+                <div class="skill-badges">
+                    <div class="skill-badge design">
+                        <i class="fas fa-paint-brush"></i>
+                        UI/UX Design
+                    </div>
+                    <div class="skill-badge dev">
+                        <i class="fas fa-code"></i>
+                        Frontend Dev
+                    </div>
+                    <div class="skill-badge marketing">
+                        <i class="fas fa-chart-line"></i>
+                        Analytics
+                    </div>
+                    <div class="skill-badge design">
+                        <i class="fas fa-pencil-alt"></i>
+                        Wireframing
+                    </div>
+                    <div class="skill-badge dev">
+                        <i class="fas fa-mobile-alt"></i>
+                        Responsive
+                    </div>
+                    <div class="skill-badge marketing">
+                        <i class="fas fa-bullseye"></i>
+                        Strategy
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <h4 class="heading-lg" style="font-size: 1.5rem; margin-top: 2rem;">Quick Actions</h4>
+                <div class="quick-actions">
+                    <div class="action-button">
+                        <div class="action-icon">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <span class="action-label">New Project</span>
+                    </div>
+                    <div class="action-button">
+                        <div class="action-icon">
+                            <i class="fas fa-file-export"></i>
+                        </div>
+                        <span class="action-label">Export</span>
+                    </div>
+                    <div class="action-button">
+                        <div class="action-icon">
+                            <i class="fas fa-share"></i>
+                        </div>
+                        <span class="action-label">Share</span>
+                    </div>
+                    <div class="action-button">
+                        <div class="action-icon">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <span class="action-label">Settings</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notifications Card -->
+            <div class="card card-glass" style="grid-column: span 4;">
+                <div class="service-icon">
+                    <i class="fas fa-bell fa-lg" style="color: var(--color-green-pastel)"></i>
+                </div>
+                <h3 class="heading-lg">Notifications</h3>
+                <div class="notification-panel">
+                    <div class="notification-item">
+                        <div class="notification-icon" style="background: rgba(255, 171, 145, 0.1);">
+                            <i class="fas fa-comment" style="color: var(--color-orange-pastel)"></i>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">New Comment</div>
+                            <p class="feature-description">Sarah left a comment on your design</p>
+                            <div class="notification-time">2 hours ago</div>
+                        </div>
+                    </div>
+                    <div class="notification-item">
+                        <div class="notification-icon" style="background: rgba(167, 199, 231, 0.1);">
+                            <i class="fas fa-tasks" style="color: var(--color-blue-pastel)"></i>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">Task Completed</div>
+                            <p class="feature-description">Homepage redesign finished</p>
+                            <div class="notification-time">5 hours ago</div>
+                        </div>
+                    </div>
+                    <div class="notification-item">
+                        <div class="notification-icon" style="background: rgba(163, 217, 177, 0.1);">
+                            <i class="fas fa-calendar" style="color: var(--color-green-pastel)"></i>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">Upcoming Meeting</div>
+                            <p class="feature-description">Client presentation tomorrow</p>
+                            <div class="notification-time">1 day ago</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Dashboard -->
+            <div class="card card-glass" style="grid-column: span 12;">
+                <div class="service-icon">
+                    <i class="fas fa-chart-pie fa-lg" style="color: var(--color-orange-pastel)"></i>
+                </div>
+                <h3 class="heading-lg">Analytics Overview</h3>
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <div class="analytics-header">
+                            <h4>Total Views</h4>
+                            <div class="analytics-trend trend-up">
+                                <i class="fas fa-arrow-up"></i>
+                                12.5%
+                            </div>
+                        </div>
+                        <div class="analytics-value">24.5K</div>
+                        <div class="progress-bar">
+                            <div class="progress-value" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    <div class="analytics-card">
+                        <div class="analytics-header">
+                            <h4>Engagement</h4>
+                            <div class="analytics-trend trend-up">
+                                <i class="fas fa-arrow-up"></i>
+                                8.2%
+                            </div>
+                        </div>
+                        <div class="analytics-value">68%</div>
+                        <div class="progress-bar">
+                            <div class="progress-value" style="width: 68%"></div>
+                        </div>
+                    </div>
+                    <div class="analytics-card">
+                        <div class="analytics-header">
+                            <h4>Conversion</h4>
+                            <div class="analytics-trend trend-down">
+                                <i class="fas fa-arrow-down"></i>
+                                3.1%
+                            </div>
+                        </div>
+                        <div class="analytics-value">4.2%</div>
+                        <div class="progress-bar">
+                            <div class="progress-value" style="width: 42%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project Gallery -->
+            <div class="card card-glass" style="grid-column: span 12;">
+                <div class="service-icon">
+                    <i class="fas fa-images fa-lg" style="color: var(--color-blue-pastel)"></i>
+                </div>
+                <h3 class="heading-lg">Recent Projects</h3>
+                <div class="gallery-grid">
+                    <div class="gallery-item">
+                        <img src="https://source.unsplash.com/random/800x450?website" alt="Project 1" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <h4 class="gallery-title">E-Commerce Platform</h4>
+                            <div class="gallery-tags">
+                                <span class="gallery-tag">React</span>
+                                <span class="gallery-tag">UI/UX</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://source.unsplash.com/random/800x450?app" alt="Project 2" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <h4 class="gallery-title">Mobile App</h4>
+                            <div class="gallery-tags">
+                                <span class="gallery-tag">Flutter</span>
+                                <span class="gallery-tag">Design</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://source.unsplash.com/random/800x450?dashboard" alt="Project 3" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <h4 class="gallery-title">Analytics Dashboard</h4>
+                            <div class="gallery-tags">
+                                <span class="gallery-tag">Vue.js</span>
+                                <span class="gallery-tag">Data</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://source.unsplash.com/random/800x450?portfolio" alt="Project 4" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <h4 class="gallery-title">Portfolio Website</h4>
+                            <div class="gallery-tags">
+                                <span class="gallery-tag">HTML/CSS</span>
+                                <span class="gallery-tag">Creative</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
