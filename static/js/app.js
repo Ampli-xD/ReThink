@@ -113,6 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Event listeners
     document.getElementById('new-note').addEventListener('click', createNewNote);
     document.getElementById('note-title').addEventListener('input', debounce(saveNote, 500));
+    document.getElementById('export-pdf').addEventListener('click', exportToPDF);
     editor.codemirror.on('change', debounce(saveNote, 500));
 });
 
@@ -237,6 +238,20 @@ async function deleteNote(noteId) {
         loadNotes();
     } catch (error) {
         console.error('Error deleting note:', error);
+    }
+}
+
+async function exportToPDF() {
+    if (!currentNote) {
+        alert('Please select a note to export');
+        return;
+    }
+    
+    try {
+        window.location.href = `/export_pdf/${currentNote.id}`;
+    } catch (error) {
+        console.error('Error exporting PDF:', error);
+        alert('Error exporting PDF. Please try again.');
     }
 }
 

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for, flash, session
+from flask import Flask, render_template, request, jsonify, redirect, url_for, flash, session, send_file
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import markdown2
@@ -6,6 +6,9 @@ import os
 from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
+from weasyprint import HTML, CSS
+from weasyprint.text.fonts import FontConfiguration
+import io
 
 # Load environment variables
 load_dotenv()
@@ -28,7 +31,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password_hash = db.Column(db.String(128))
+    password_hash = db.Column(db.String(512))
     notes = db.relationship('Note', backref='author', lazy=True, cascade='all, delete-orphan')
 
     def set_password(self, password):
@@ -56,7 +59,7 @@ class Note(db.Model):
 
 def init_db():
     with app.app_context():
-        # Create tables if they don't exist
+        # Create tables only if they don't exist
         db.create_all()
         
         # Create a test user only if no users exist
@@ -190,6 +193,120 @@ def preview_markdown():
     html = html.replace('<pre><code class="', '<pre><code class="language-')
     
     return jsonify({'html': html})
+
+@app.route('/export_pdf/<int:note_id>')
+@login_required
+def export_pdf(note_id):
+    note = Note.query.get_or_404(note_id)
+    if note.user_id != session['user_id']:
+        flash('Unauthorized access to note', 'error')
+        return redirect(url_for('index'))
+    
+    try:
+        # Convert markdown to HTML
+        html_content = markdown2.markdown(note.content, extras=['fenced-code-blocks', 'tables'])
+        
+        # Create HTML document with styling
+        html = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>{note.title}</title>
+            <style>
+                @page {{
+                    margin: 2.5cm;
+                    @top-center {{
+                        content: "{note.title}";
+                        font-family: Arial, sans-serif;
+                        font-size: 10pt;
+                        color: #666;
+                    }}
+                    @bottom-right {{
+                        content: counter(page);
+                        font-family: Arial, sans-serif;
+                        font-size: 10pt;
+                    }}
+                }}
+                body {{
+                    font-family: Arial, sans-serif;
+                    line-height: 1.6;
+                    font-size: 11pt;
+                }}
+                h1 {{
+                    color: #2c3e50;
+                    text-align: center;
+                    font-size: 24pt;
+                    margin-bottom: 2em;
+                }}
+                h2, h3 {{
+                    color: #34495e;
+                    margin-top: 1.5em;
+                }}
+                pre {{
+                    background-color: #f8f9fa;
+                    padding: 1em;
+                    border-radius: 4px;
+                    font-family: 'Courier New', monospace;
+                    font-size: 9pt;
+                    white-space: pre-wrap;
+                    overflow-x: auto;
+                }}
+                code {{
+                    font-family: 'Courier New', monospace;
+                    font-size: 9pt;
+                    background-color: #f8f9fa;
+                    padding: 2px 4px;
+                    border-radius: 2px;
+                }}
+                table {{
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 1em 0;
+                }}
+                th, td {{
+                    border: 1px solid #ddd;
+                    padding: 8px;
+                    text-align: left;
+                }}
+                th {{
+                    background-color: #f5f5f5;
+                }}
+            </style>
+        </head>
+        <body>
+            <h1>{note.title}</h1>
+            {html_content}
+        </body>
+        </html>
+        """
+        
+        # Configure fonts
+        font_config = FontConfiguration()
+        
+        # Create PDF in memory
+        pdf_file = io.BytesIO()
+        HTML(string=html).write_pdf(
+            pdf_file,
+            font_config=font_config,
+            presentational_hints=True
+        )
+        
+        # Reset file pointer to start
+        pdf_file.seek(0)
+        
+        # Send the PDF file
+        return send_file(
+            pdf_file,
+            mimetype='application/pdf',
+            as_attachment=True,
+            download_name=f"{note.title}.pdf"
+        )
+                
+    except Exception as e:
+        print(f"Error in PDF generation: {str(e)}")
+        flash('Error generating PDF. Please try again.', 'error')
+        return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(debug=True)
