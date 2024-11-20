@@ -6,8 +6,8 @@ import os
 from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
-from markdown_pdf import MarkdownPdf, Section
 import io
+from markdown_pdf import MarkdownPdf, Section
 
 # Load environment variables
 load_dotenv()
@@ -79,6 +79,10 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+@app.route('/')
+def home():
+    return render_template('home.html')
+
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -114,7 +118,7 @@ def login():
         if user and user.check_password(password):
             session['user_id'] = user.id
             flash('Logged in successfully!')
-            return redirect(url_for('index'))
+            return redirect(url_for('notes'))
         
         flash('Invalid username or password')
         return redirect(url_for('login'))
@@ -127,9 +131,9 @@ def logout():
     flash('You have been logged out.')
     return redirect(url_for('login'))
 
-@app.route('/')
+@app.route('/notes')
 @login_required
-def index():
+def notes():
     user_id = session.get('user_id')
     user = User.query.get(user_id)
     notes = Note.query.filter_by(user_id=user_id).order_by(Note.updated_at.desc()).all()
@@ -199,7 +203,7 @@ def export_pdf(note_id):
     note = Note.query.get_or_404(note_id)
     if note.user_id != session['user_id']:
         flash('Unauthorized access to note', 'error')
-        return redirect(url_for('index'))
+        return redirect(url_for('notes'))
     
     try:
         # Get current user
@@ -221,14 +225,13 @@ def export_pdf(note_id):
             "modDate": current_time
         })
         
-        # Add content
-        pdf.add_section(Section(note.content, toc=False))
+        # Add content with title
+        content = f"# {note.title}\n\n{note.content}"
+        pdf.add_section(Section(content, toc=False))
         
-        # Save to BytesIO instead of file
+        # Save to BytesIO
         pdf_file = io.BytesIO()
         pdf.save(pdf_file)
-        
-        # Reset file pointer to start
         pdf_file.seek(0)
         
         # Send the PDF file
@@ -242,7 +245,7 @@ def export_pdf(note_id):
     except Exception as e:
         print(f"Error in PDF generation: {str(e)}")
         flash('Error generating PDF. Please try again.', 'error')
-        return redirect(url_for('index'))
+        return redirect(url_for('notes'))
 
 if __name__ == '__main__':
     app.run(debug=True)

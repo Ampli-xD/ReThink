@@ -53,6 +53,30 @@ ehthumbs.db
 Thumbs.db
 
 # Application specific
-instance/
 .webassets-cache/
 notes.db
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+
+# pytest
+.pytest_cache/
+.pytest
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Local development settings
+.instance/
+
+# Generated PDFs
+*.pdf

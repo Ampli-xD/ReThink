@@ -15,6 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
         renderingConfig: {
             singleLineBreaks: false,
             codeSyntaxHighlighting: true,
+            markedOptions: {
+                headerIds: false,
+                breaks: false
+            }
         },
         minHeight: "500px",
         status: ["lines", "words", "cursor"],
@@ -27,8 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 className: "fa fa-save",
                 title: "Save",
             },
-            "|",
-            "undo", "redo", "|",
+            "undo", "redo",
             {
                 name: "heading-1",
                 action: EasyMDE.toggleHeading1,
@@ -47,30 +50,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 className: "fa fa-header fa-header-x fa-header-3",
                 title: "Heading 3",
             },
-            "|",
-            "bold",
-            "italic",
-            "strikethrough",
-            "|",
-            "quote",
+            "bold", "italic", "strikethrough",
+            "quote", "unordered-list", "ordered-list",
+            "link", "image",
             "code",
-            "unordered-list",
-            "ordered-list",
-            "|",
-            "link",
-            "image",
-            "|",
             {
-                name: "horizontal-rule",
-                action: EasyMDE.drawHorizontalRule,
-                className: "fa fa-minus",
-                title: "Insert Horizontal Line",
+                name: "preview",
+                action: EasyMDE.togglePreview,
+                className: "fa fa-eye no-disable",
+                title: "Toggle Preview",
             },
-            "|",
-            "preview",
-            "side-by-side",
+            {
+                name: "side-by-side",
+                action: EasyMDE.toggleSideBySide,
+                className: "fa fa-columns no-disable",
+                title: "Toggle Side by Side",
+            },
             "fullscreen",
-            "|",
+            {
+                name: "pdf",
+                action: function(editor) {
+                    if (currentNote && currentNote.id) {
+                        window.location.href = `/export_pdf/${currentNote.id}`;
+                    } else {
+                        alert('Please save the note first before exporting to PDF.');
+                    }
+                },
+                className: "fa fa-file-pdf-o",
+                title: "Export to PDF",
+            },
             {
                 name: "guide",
                 action: "https://www.markdownguide.org/basic-syntax/",
@@ -78,32 +86,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: "Markdown Guide",
             }
         ],
-        previewRender: (text) => {
-            let result = '';
-            fetch('/api/preview', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ content: text })
-            })
-            .then(response => response.json())
-            .then(data => {
-                const previewElement = document.querySelector('.EasyMDEContainer .editor-preview, .EasyMDEContainer .editor-preview-side');
-                if (previewElement) {
-                    previewElement.innerHTML = data.html;
-                    // Re-initialize Prism for the new content
-                    if (window.Prism) {
-                        previewElement.querySelectorAll('pre code').forEach((block) => {
-                            Prism.highlightElement(block);
-                        });
-                    }
-                }
-            })
-            .catch(error => {
-                console.error('Error previewing markdown:', error);
-            });
-            return 'Loading preview...';
+        shortcuts: {
+            "toggleBold": "Cmd-B",
+            "toggleItalic": "Cmd-I",
+            "toggleHeading1": "Cmd-1",
+            "toggleHeading2": "Cmd-2",
+            "toggleHeading3": "Cmd-3",
         }
     });
 
