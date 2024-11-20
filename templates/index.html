@@ -9,7 +9,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.css" rel="stylesheet" />
-    <link href="{{ url_for('static', filename='css/theme.css') }}" rel="stylesheet">
     <style>
         :root {
             --primary-color: #000DFF;
@@ -39,21 +38,7 @@
             background: white;
             border-radius: 15px;
             box-shadow: var(--card-shadow);
-            padding: 1.5rem;
-            height: calc(100vh - 120px);
-            overflow-y: auto;
-            display: none;
-        }
-
-        .notes-sidebar.show {
-            display: block;
-        }
-
-        .editor-container {
-            background: white;
-            border-radius: 15px;
-            box-shadow: var(--card-shadow);
-            padding: 1.5rem;
+            padding: 1rem;
             height: calc(100vh - 120px);
             display: flex;
             flex-direction: column;
@@ -62,16 +47,29 @@
         .note-list {
             border: none;
             padding: 0;
+            overflow-y: auto;
+            flex-grow: 1;
+            margin-right: -0.5rem;
+            padding-right: 0.5rem;
         }
 
         .note-item {
-            padding: 1rem;
-            margin-bottom: 0.75rem;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
             border-radius: 10px;
             background-color: var(--bg-light);
             transition: all 0.3s ease;
             border: 2px solid transparent;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 3.5rem;
+            overflow: hidden;
+        }
+
+        .note-item:last-child {
+            margin-bottom: 0;
         }
 
         .note-item:hover {
@@ -85,33 +83,55 @@
             border-color: var(--primary-color);
         }
 
+        .note-item-content {
+            flex-grow: 1;
+            min-width: 0; /* Enables text truncation */
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 1rem;
+        }
+
         .note-title {
             font-weight: 600;
             color: var(--text-dark);
-            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 0;
+            flex-grow: 1;
         }
 
         .note-timestamp {
             font-size: 0.8rem;
             color: #95a5a6;
+            white-space: nowrap;
         }
 
         .create-note-btn {
             background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 0.75rem 1.5rem;
+            padding: 0.75rem 1rem;
             border-radius: 10px;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             transition: all 0.3s ease;
             width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-shrink: 0;
         }
 
-        .create-note-btn:hover {
-            background-color: var(--primary-light);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            color: white;
+        .editor-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            padding: 1.5rem;
+            height: calc(100vh - 120px);
+            display: flex;
+            flex-direction: column;
         }
 
         .CodeMirror {
@@ -119,7 +139,13 @@
             border-radius: 10px;
             padding: 1rem;
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
-            height: auto !important;
+            height: 100% !important;
+            max-height: calc(100vh - 250px) !important; /* Account for toolbar, title input, and padding */
+        }
+
+        .CodeMirror-scroll {
+            min-height: 100% !important;
+            max-height: 100% !important;
         }
 
         .CodeMirror pre.CodeMirror-line,
@@ -264,6 +290,7 @@
             margin-bottom: 1rem;
             border-bottom: 1px solid #eee;
             opacity: 1 !important;
+            flex-shrink: 0;
         }
 
         .editor-toolbar a {
@@ -348,81 +375,208 @@
             font-size: 4rem;
             margin-bottom: 1rem;
         }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem;
+                margin-top: 0.5rem;
+            }
+
+            .notes-sidebar {
+                height: auto;
+                max-height: 40vh;
+                margin-bottom: 1rem;
+            }
+
+            .note-list {
+                -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            }
+
+            .note-item {
+                padding: 0.6rem 0.8rem;
+                margin-bottom: 0.4rem;
+                min-height: 3rem;
+            }
+
+            .note-timestamp {
+                font-size: 0.75rem;
+            }
+
+            .action-buttons {
+                flex-wrap: wrap;
+                gap: 0.25rem;
+            }
+
+            .action-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            .editor-toolbar {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.25rem;
+            }
+
+            .editor-toolbar a {
+                padding: 8px !important;
+            }
+
+            .CodeMirror {
+                font-size: 16px; /* Better for mobile readability */
+                padding: 0.75rem;
+                max-height: calc(100vh - 200px) !important; /* Adjusted for mobile */
+            }
+
+            .editor-preview,
+            .editor-preview-side {
+                padding: 1rem;
+                font-size: 16px;
+            }
+
+            #note-title {
+                width: 100%;
+                max-width: none;
+                margin-bottom: 0.5rem;
+            }
+
+            .action-buttons {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            /* Improved touch targets */
+            .note-item {
+                padding: 1.25rem;
+                margin-bottom: 0.5rem;
+            }
+
+            /* Navbar improvements */
+            .navbar .container-fluid {
+                flex-wrap: nowrap;
+            }
+
+            .navbar-brand {
+                font-size: 1.2rem;
+            }
+
+            /* Hide username on very small screens */
+            @media (max-width: 400px) {
+                .navbar .me-3 {
+                    display: none;
+                }
+            }
+
+            /* Improved scrolling on mobile */
+            .CodeMirror-scroll {
+                -webkit-overflow-scrolling: touch;
+            }
+
+            /* Better button spacing on mobile */
+            .create-note-btn {
+                padding: 0.8rem 1rem;
+                font-size: 1rem;
+            }
+        }
+
+        /* Tablet specific adjustments */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .notes-sidebar, .editor-container {
+                height: calc(100vh - 100px);
+            }
+
+            .action-buttons {
+                gap: 0.3rem;
+            }
+
+            .action-btn {
+                padding: 0.5rem 0.9rem;
+            }
+        }
+
+        /* Touch device optimizations */
+        @media (hover: none) {
+            .note-item:hover {
+                transform: none;
+            }
+
+            .editor-toolbar a:hover {
+                background-color: transparent !important;
+            }
+
+            .action-btn:active {
+                transform: scale(0.98);
+            }
+        }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light">
-        <div class="container-fluid px-4">
-            <button class="sidebar-toggle btn btn-link d-md-none" type="button">
-                <i class="fas fa-bars"></i>
-            </button>
+        <div class="container-fluid px-3">
             <a class="navbar-brand" href="/">ReThink Notes</a>
             <div class="d-flex align-items-center">
-                <button class="theme-toggle me-2" onclick="toggleTheme()">
-                    <i class="fas fa-moon"></i>
-                </button>
-                <div class="dropdown">
-                    <button class="btn btn-link dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-user"></i>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <li><a class="dropdown-item" href="/logout">Logout</a></li>
-                    </ul>
-                </div>
+                <span class="me-3">{{ user.username }}</span>
+                <a href="/logout" class="btn btn-outline-primary btn-sm">Logout</a>
             </div>
         </div>
     </nav>
 
-    <div class="main-container">
-        <div class="notes-sidebar">
-            <button class="create-note-btn btn btn-primary mb-3">
-                <span>Create New Note</span>
-            </button>
-            <div class="note-list">
-                {% for note in notes %}
-                <div class="note-item" data-note-id="{{ note.id }}">
-                    <h5 class="note-title">{{ note.title }}</h5>
-                    <small class="note-timestamp">{{ note.updated_at.strftime('%Y-%m-%d %H:%M') }}</small>
+    <div class="container-fluid main-container">
+        <div class="row g-3">
+            <!-- Notes Sidebar -->
+            <div class="col-md-3">
+                <div class="notes-sidebar">
+                    <button class="create-note-btn" id="new-note">
+                        <i class="fas fa-plus"></i>
+                        <span>New Note</span>
+                    </button>
+                    <div id="notes-container" class="note-list">
+                        {% for note in notes %}
+                        <div class="note-item {% if note.id == current_note_id %}active{% endif %}" data-note-id="{{ note.id }}">
+                            <div class="note-item-content">
+                                <div class="note-title">{{ note.title or 'Untitled Note' }}</div>
+                                <div class="note-timestamp">
+                                    <i class="far fa-clock"></i>
+                                    {{ note.updated_at.strftime('%b %d') }}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
                 </div>
-                {% endfor %}
             </div>
-        </div>
 
-        <div class="editor-container">
-            <textarea id="editor"></textarea>
+            <!-- Editor Container -->
+            <div class="col-md-9">
+                <div class="editor-container">
+                    <div id="editor-area" style="display: none;">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <input type="text" id="note-title" class="form-control" placeholder="Note title...">
+                        </div>
+                        <div class="editor-wrapper">
+                            <textarea id="note-content"></textarea>
+                        </div>
+                    </div>
+                    <div id="empty-state">
+                        <i class="far fa-file-alt"></i>
+                        <h3 class="text-center">Select a note or create a new one</h3>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markdown.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
-    
-    <script>
-        // Mobile sidebar toggle
-        document.querySelector('.sidebar-toggle').addEventListener('click', function() {
-            document.querySelector('.notes-sidebar').classList.toggle('show');
-        });
-
-        // Close sidebar when clicking outside on mobile
-        document.addEventListener('click', function(event) {
-            const sidebar = document.querySelector('.notes-sidebar');
-            const sidebarToggle = document.querySelector('.sidebar-toggle');
-            
-            if (window.innerWidth < 768 && 
-                !sidebar.contains(event.target) && 
-                !sidebarToggle.contains(event.target)) {
-                sidebar.classList.remove('show');
-            }
-        });
-
-        // Handle window resize
-        window.addEventListener('resize', function() {
-            if (window.innerWidth >= 768) {
-                document.querySelector('.notes-sidebar').classList.remove('show');
-            }
-        });
-    </script>
 </body>
 </html>

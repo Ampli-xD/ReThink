@@ -146,6 +146,204 @@ We welcome contributions! Here's how you can help make ReThink Notes better.
 - Write tests for new features
 - Update documentation for API changes
 
+## 🎨 Markdown Styling Guide
+
+ReThink Notes supports rich HTML styling within markdown for beautiful document formatting. Here's your complete styling guide:
+
+### Text Utilities
+
+```markdown
+<!-- Text Alignment -->
+<div class="text-center">Centered Text</div>
+<div class="text-right">Right-aligned Text</div>
+
+<!-- Text Sizes -->
+<div class="text-sm">Small Text</div>
+<div class="text-lg">Large Text</div>
+<div class="text-xl">Extra Large Text</div>
+<div class="text-2xl">2X Large Text</div>
+
+<!-- Text Styles -->
+<div class="font-bold">Bold Text</div>
+<div class="font-light">Light Text</div>
+<div class="italic">Italic Text</div>
+
+<!-- Text Colors -->
+<div class="text-primary">Primary Color</div>
+<div class="text-secondary">Secondary Color</div>
+<div class="text-success">Success Color</div>
+<div class="text-warning">Warning Color</div>
+<div class="text-error">Error Color</div>
+<div class="text-gray">Gray Text</div>
+```
+
+### Alerts & Cards
+
+```markdown
+<!-- Info Alert -->
+<div class="alert alert-info">
+    Important information here!
+</div>
+
+<!-- Warning Alert -->
+<div class="alert alert-warning">
+    Warning message here!
+</div>
+
+<!-- Success Alert -->
+<div class="alert alert-success">
+    Success message here!
+</div>
+
+<!-- Error Alert -->
+<div class="alert alert-error">
+    Error message here!
+</div>
+
+<!-- Card -->
+<div class="card">
+    <h3>Card Title</h3>
+    <p>Card content goes here...</p>
+</div>
+```
+
+### Layout Components
+
+```markdown
+<!-- Flex Container -->
+<div class="flex-container">
+    <div>Column 1</div>
+    <div>Column 2</div>
+</div>
+
+<!-- Vertical Flex -->
+<div class="flex-container flex-col">
+    <div>Row 1</div>
+    <div>Row 2</div>
+</div>
+
+<!-- Grid Container -->
+<div class="grid-container">
+    <div>Grid Item 1</div>
+    <div>Grid Item 2</div>
+    <div>Grid Item 3</div>
+</div>
+
+<!-- Spacing -->
+<div class="mt-1">Margin Top 0.5em</div>
+<div class="mb-2">Margin Bottom 1em</div>
+<div class="mt-4">Margin Top 2em</div>
+```
+
+### Custom Lists
+
+```markdown
+<!-- Checklist -->
+<ul class="checklist">
+    <li>Checked item 1</li>
+    <li>Checked item 2</li>
+</ul>
+```
+
+### Decorative Elements
+
+```markdown
+<!-- Gradient Divider -->
+<hr class="divider">
+
+<!-- Badge -->
+<span class="badge">New</span>
+
+<!-- Special Quote -->
+<blockquote class="quote-special">
+    A beautifully styled quote with decorative quotation mark
+</blockquote>
+```
+
+### Tables
+
+```markdown
+<!-- Striped Table -->
+<table class="table-striped">
+    <tr><th>Header 1</th><th>Header 2</th></tr>
+    <tr><td>Data 1</td><td>Data 2</td></tr>
+</table>
+
+<!-- Bordered Table -->
+<table class="table-bordered">
+    <tr><th>Header 1</th><th>Header 2</th></tr>
+    <tr><td>Data 1</td><td>Data 2</td></tr>
+</table>
+```
+
+### Code Blocks
+
+```markdown
+<!-- Dark Theme Code Window -->
+<div class="code-window">
+    <code>
+    function hello() {
+        console.log("Hello, World!");
+    }
+    </code>
+</div>
+```
+
+### Images
+
+```markdown
+<!-- Rounded Image -->
+<img src="image.jpg" class="img-rounded">
+
+<!-- Circular Image -->
+<img src="image.jpg" class="img-circle">
+
+<!-- Shadowed Image -->
+<img src="image.jpg" class="img-shadow">
+
+<!-- Bordered Image -->
+<img src="image.jpg" class="img-border">
+```
+
+### Print Controls
+
+```markdown
+<!-- Page Breaks -->
+<div class="page-break-before">Starts on new page</div>
+<div class="page-break-after">Next content on new page</div>
+
+<!-- Hide from Print -->
+<div class="no-print">Only visible on screen</div>
+```
+
+### Background Colors
+
+```markdown
+<div class="bg-light">Light Background</div>
+<div class="bg-primary">Primary Background</div>
+<div class="bg-secondary">Secondary Background</div>
+<div class="bg-success">Success Background</div>
+<div class="bg-warning">Warning Background</div>
+<div class="bg-error">Error Background</div>
+```
+
+### Combining Classes
+
+You can combine multiple classes for complex styling:
+
+```markdown
+<div class="card text-center bg-light mb-2">
+    <h3 class="text-xl font-bold text-primary">
+        Beautiful Heading
+    </h3>
+    <p class="text-gray">
+        Content with custom styling
+    </p>
+</div>
+```
+
+These styles are optimized for both screen viewing and PDF export. Use them to create beautiful, professional documents!
+
 ## License
 All rights reserved.
 
