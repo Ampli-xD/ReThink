@@ -25,6 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         sideBySideFullscreen: false,
         forceSync: true,
+        hideIcons: [],
+        showIcons: ["code", "table", "clean-block", "horizontal-rule"],
         renderingConfig: {
             singleLineBreaks: false,
             codeSyntaxHighlighting: true,
