@@ -7,12 +7,21 @@ from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 
+# Load environment variables
 load_dotenv()
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///notes.db')
+
+# Database configuration
+if os.getenv('DATABASE_URL'):
+    # Production PostgreSQL database
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+else:
+    # Development SQLite database
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///notes.db'
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = 'your-secret-key-here'  # Change this to a secure secret key
+app.secret_key = os.getenv('SECRET_KEY', 'your-secret-key-here')  # Change this in production
 db = SQLAlchemy(app)
 
 class User(db.Model):
