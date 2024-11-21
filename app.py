@@ -225,7 +225,7 @@ def export_pdf(note_id):
             "modDate": current_time
         })
         
-        # Add content without title
+        # Add content with title
         content = note.content
         pdf.add_section(Section(content, toc=False))
         

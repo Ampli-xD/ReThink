@@ -137,31 +137,14 @@ body {
     padding: 0.5rem;
     background-color: var(--bg-secondary) !important;
     border-color: var(--border-color) !important;
-    flex-wrap: wrap;
-    gap: 0.25rem;
 }
 
 .editor-toolbar a {
-    display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
-    width: 2rem;
-    height: 2rem;
-    padding: 0.25rem !important;
-    margin: 0 !important;
-    border-radius: 0.25rem;
+    color: var(--text-primary) !important;
 }
 
-@media (max-width: 768px) {
-    .editor-toolbar {
-        padding: 0.25rem;
-    }
-    
-    .editor-toolbar a {
-        width: 1.75rem;
-        height: 1.75rem;
-        font-size: 0.875rem;
-    }
+.editor-toolbar a:hover {
+    background-color: var(--border-color) !important;
 }
 
 /* Note List Styles */
